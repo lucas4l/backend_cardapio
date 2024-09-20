@@ -1,0 +1,37 @@
+# Dependências
+node_modules/
+
+# Logs
+npm-debug.log*
+
+# Arquivos de ambiente
+.env
+
+# Pasta de migrações geradas
+migrations/meta/
+
+# Configurações do Docker
+docker-compose.override.yml
+
+# Arquivos gerados pela build
+dist/
+build/
+
+# Cache do TypeScript
+*.tsbuildinfo
+
+# Cache e configurações do Drizzle ORM
+.drizzle/
+drizzle.config.ts
+
+# Configurações de editores
+.vscode/
+.idea/
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos temporários e caches
+tmp/
+cache/
