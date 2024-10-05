@@ -1,0 +1,53 @@
+#
+GET http://localhost:3333/orders
+
+###
+GET http://localhost:3333/tables
+
+###
+GET http://localhost:3333/get-all-product-in-order
+
+###
+POST http://localhost:3333/insert-product
+Content-Type:  application/json
+
+{
+	"name": "Carne de parrilha",
+	"value": 150
+}
+
+###
+POST http://localhost:3333/create-order-table
+Content-Type:  application/json
+
+{
+	"orderId": "ej1ugj1b062sz5xapxbqqv1d",
+	"idProduto": "dkyr9h31goxikorvsflj2by7"
+}
+
+###
+POST http://localhost:3333/get-products-in-order
+Content-Type:  application/json
+
+{
+	"orderId": "iapnz5wnx46xzu19xykeq35w"
+}
+
+###
+POST http://localhost:3333/create-full-order
+Content-Type:  application/json
+
+{
+	"productId": "yn06uhyy7acsxsjigp29s0rh", 
+	"name": "marcus", 
+	"numberTable": 300
+}
+
+###
+DELETE http://localhost:3333/delete-product-from-order
+Content-Type:  application/json
+
+{
+	"orderId": "ej1ugj1b062sz5xapxbqqv1d",
+	"productId": "dkyr9h31goxikorvsflj2by7"
+}
