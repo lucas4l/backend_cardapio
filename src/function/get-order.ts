@@ -25,22 +25,22 @@ export async function getOrder() {
       .from(cliente)
   )
 
-  const ordersInTable = await db.$with('teste').as(
+  const ordersInTable = db.$with('test').as(
     db
       .select({
-        orderId: sql`
-    JSON_AGG(
-      JSON_BUILD_OBJECT(
-        'productId', ${orderProduct.productId},
-        'createdAt', ${orderProduct.createdAt}
-      )
-      ORDER BY ${orderProduct.createdAt}
-    ) 
-  `.as('pedidos'),
+        pedidos: sql`
+      JSON_AGG(
+        JSON_BUILD_OBJECT(
+          'productId', ${orderProduct.productId},
+          'createdAt', ${orderProduct.createdAt}
+        )
+        ORDER BY ${orderProduct.createdAt}
+      ) 
+    `.as('pedidos'),
+        orderId: orderProduct.orderId,
       })
       .from(orderProduct)
       .groupBy(orderProduct.orderId)
-      .orderBy(orderProduct.orderId)
   )
 
   const orders = await db
@@ -51,10 +51,11 @@ export async function getOrder() {
       createdAt: getAllClients.createdAt,
       tableClientId: getAllTables.id,
       tableClientNumber: getAllTables.numberTable,
-      orderId: ordersInTable.orderId,
+      orderId: getAllTables.orderId,
+      pedido: ordersInTable.pedidos,
     })
     .from(getAllClients)
     .leftJoin(getAllTables, eq(getAllClients.tableClient, getAllTables.id))
-
+    .leftJoin(ordersInTable, eq(getAllTables.orderId, ordersInTable.orderId))
   return { orders }
 }
