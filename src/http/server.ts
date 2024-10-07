@@ -12,8 +12,13 @@ import { insertProductRoute } from './routes/insert-product'
 import { createOrderTableRoute } from './routes/create-order-table'
 import { createFullOrderRouter } from './routes/create-full-order'
 import { deleteProductFromOrderRouter } from './routes/delete-product-from-order'
+import fastifyCors from '@fastify/cors'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
+
+app.register(fastifyCors, {
+  origin: '*',
+})
 
 app.setValidatorCompiler(validatorCompiler)
 app.setSerializerCompiler(serializerCompiler)

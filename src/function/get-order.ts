@@ -1,6 +1,6 @@
-import { eq } from 'drizzle-orm'
+import { eq, sql } from 'drizzle-orm'
 import { db } from '../db'
-import { cliente, tableClient } from '../db/schema'
+import { cliente, orderProduct, tableClient } from '../db/schema'
 
 export async function getOrder() {
   const getAllTables = db.$with('get_all_tables').as(
@@ -25,15 +25,33 @@ export async function getOrder() {
       .from(cliente)
   )
 
+  const ordersInTable = await db.$with('teste').as(
+    db
+      .select({
+        orderId: sql`
+    JSON_AGG(
+      JSON_BUILD_OBJECT(
+        'productId', ${orderProduct.productId},
+        'createdAt', ${orderProduct.createdAt}
+      )
+      ORDER BY ${orderProduct.createdAt}
+    ) 
+  `.as('pedidos'),
+      })
+      .from(orderProduct)
+      .groupBy(orderProduct.orderId)
+      .orderBy(orderProduct.orderId)
+  )
+
   const orders = await db
-    .with(getAllTables, getAllClients)
+    .with(getAllTables, getAllClients, ordersInTable)
     .select({
       id: getAllClients.id,
       name: getAllClients.name,
       createdAt: getAllClients.createdAt,
       tableClientId: getAllTables.id,
       tableClientNumber: getAllTables.numberTable,
-      orderId: getAllTables.orderId,
+      orderId: ordersInTable.orderId,
     })
     .from(getAllClients)
     .leftJoin(getAllTables, eq(getAllClients.tableClient, getAllTables.id))
